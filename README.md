@@ -1,4 +1,5 @@
 # common
+
 Common scala codes shared between multiple components. See:
 
  - [osm-tag-aggregator](https://github.com/tagdynamics-org/osm-tag-aggregator)
