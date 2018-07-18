@@ -1,8 +1,9 @@
 package org.tagdynamics.aggregator.common
 
+import java.net.URI
 import java.nio.file.{Files, Paths}
 
-import scala.io.Source
+import scala.io.{Codec, Source}
 
 object Utils {
 
@@ -22,13 +23,21 @@ object Utils {
     result
   }
 
-  /** Non-streaming JSONL loader */
-  def loadResourceJSONL[A](resourceFilename: String, parse: String => A): Seq[A] = {
+  def loadJSONL[A](filename: URI, parse: String => A): Seq[A] = {
+    val source = {
+      implicit val codec: Codec = Codec.UTF8
+      Source.fromURI(filename)
+    }
+
     // TODO: https://alvinalexander.com/scala/how-to-open-read-text-files-in-scala-cookbook-examples
-    val source = Source.fromURI(getClass.getResource(resourceFilename).toURI)
-    val result = source.getLines().map(parse).toList
+    val result: Seq[A] = source.getLines().map(parse).toList
     source.close()
     result
+  }
+
+  /** Non-streaming JSONL loader */
+  def loadResourceJSONL[A](resourceFilename: String, parse: String => A): Seq[A] = {
+    loadJSONL(getClass.getResource(resourceFilename).toURI, parse)
   }
 
 }
