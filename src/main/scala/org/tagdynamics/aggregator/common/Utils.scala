@@ -1,5 +1,6 @@
 package org.tagdynamics.aggregator.common
 
+import java.net.URI
 import java.nio.file.{Files, Paths}
 
 import scala.io.{Codec, Source}
