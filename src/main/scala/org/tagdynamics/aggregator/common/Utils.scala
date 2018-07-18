@@ -2,7 +2,7 @@ package org.tagdynamics.aggregator.common
 
 import java.nio.file.{Files, Paths}
 
-import scala.io.Source
+import scala.io.{Codec, Source}
 
 object Utils {
 
