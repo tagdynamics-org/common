@@ -43,12 +43,23 @@ case class DayStamp(data: Char) extends AnyVal {
 case object DayStamp {
 
   /** 1.1.2010 -> true, 31.2.2010 -> false */
-  def isValidCalenderDate(year: Int, month: Int, day: Int): Boolean = {
-
+  def assertValidCalenderDate(year: Int, month: Int, day: Int): Unit = {
     if (year < 2000 || year > 2063) throw new Exception(s"Year $year out of range")
     if (month < 1 || month > 12) throw new Exception(s"Month $month out of range")
     if (day < 1 || day > 31) throw new Exception(s"Day $day out of range")
 
+    /*
+    val s = new SimpleDateFormat("yyyyMMdd")
+    s.setTimeZone(TimeZone.getTimeZone("UTC"))
+    s.setLenient(false)
+
+    // TODO: use string interpolation instead
+    s.parse(year.toString + "%02d".format(month) + "%02d".format(day))
+    */
+  }
+
+  /** 1.1.2010 -> true, 31.2.2010 -> false */
+  def isValidCalenderDate(year: Int, month: Int, day: Int): Boolean = {
     val s = new SimpleDateFormat("yyyyMMdd")
     s.setTimeZone(TimeZone.getTimeZone("UTC"))
     s.setLenient(false)
@@ -57,7 +68,7 @@ case object DayStamp {
   }
 
   def from(year0: Int, month: Int, day: Int): DayStamp = {
-    if (!isValidCalenderDate(year0, month, day)) throw new Exception(s"Date $year0/$month/$day not valid")
+    assertValidCalenderDate(year0, month, day)
 
     val year = year0 - 2000
     val value = (year << (4 + 5 + 1)) + (month << (4 + 1)) + day
