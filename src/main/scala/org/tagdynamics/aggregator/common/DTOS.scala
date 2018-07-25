@@ -14,6 +14,29 @@ case object NotCreated extends ElementState
 case class Visible(tagList: List[String]) extends ElementState
 case object Deleted extends ElementState
 
+case object ElementState {
+  def isDeleted(e: ElementState): Boolean = {
+    e match {
+      case Deleted => true
+      case _ => false
+    }
+  }
+
+  def isVisible(e: ElementState): Boolean = {
+    e match {
+      case Visible(_) => true
+      case _ => false
+    }
+  }
+
+  def isNotCreated(e: ElementState): Boolean = {
+    e match {
+      case NotCreated => true
+      case _ => false
+    }
+  }
+}
+
 case class Counted[A](key: A, n: Int)
 case class Transition[A](from: A, to: A)
 case class DeltasByDay[A](key: A, deltas: Map[DayStamp, Int])
