@@ -28,9 +28,12 @@ case class DayStamp(data: Char) extends AnyVal {
   def month: Int = (data >> 5) & ((1 << 4) - 1) // 4 bit of data
   def day: Int = data & ((1 << 5) - 1) // 5 bit of data
 
+  // eg. 631231
+  def yymmdd: Int = (year-2000) * 100 * 100 + month * 100 + day
+
   // eg. yr = 2000, month = 1, day = 2 => "000102"
   // Note: sorting by `toString` puts elements in chronological order
-  override def toString: String = f"${year - 2000}%02d$month%02d$day%02d"
+  override def toString: String = "%06d".format(yymmdd)
 
   /** UTC epoch seconds (for 00:00:00) of given day */
   def epochSecs: Long = {
@@ -94,4 +97,10 @@ case object DayStamp {
     DayStamp.from(year, month, day)
   }
 
+  // the below use yymmdd instead of epochSecs which is terribly slow
+  def min(a: DayStamp, b: DayStamp): DayStamp = if (a.yymmdd < b.yymmdd) a else b
+  def max(a: DayStamp, b: DayStamp): DayStamp = if (a.yymmdd < b.yymmdd) b else a
+
+  def min(xs: Seq[DayStamp]): DayStamp = xs.reduce(DayStamp.min)
+  def max(xs: Seq[DayStamp]): DayStamp = xs.reduce(DayStamp.max)
 }
